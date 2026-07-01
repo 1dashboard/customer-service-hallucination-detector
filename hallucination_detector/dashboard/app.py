@@ -92,7 +92,13 @@ def page_batch_history() -> None:
 def page_upload() -> None:
     st.header("📤 上传数据并检测")
 
-    uploaded_file = st.file_uploader("上传 replies.json 文件", type=["json"])
+    if "_uploader_key" not in st.session_state:
+        st.session_state._uploader_key = 0
+
+    uploaded_file = st.file_uploader(
+        "上传 replies.json 文件", type=["json"],
+        key=f"file_uploader_{st.session_state._uploader_key}",
+    )
 
     if uploaded_file is not None:
         content = uploaded_file.read()
@@ -142,8 +148,9 @@ def page_upload() -> None:
                         st.session_state._detecting = False
                         st.session_state._detection_result = None
                         st.session_state._detection_error = None
-                        st.warning("检测已取消，已回到上传页面")
-                        time.sleep(0.5)
+                        st.session_state._detection_file = None
+                        st.session_state._detection_thread = None
+                        st.session_state._uploader_key += 1
                         st.rerun()
 
             # Start or check background thread
