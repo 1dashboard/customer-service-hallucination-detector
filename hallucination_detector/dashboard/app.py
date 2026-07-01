@@ -192,6 +192,7 @@ def page_upload() -> None:
                     st.session_state._detection_error = None
                 elif st.session_state._detection_result:
                     result = st.session_state._detection_result
+                    st.balloons()
                     st.toast("✅ 本次检测已完成", icon="✅")
                     st.success(
                         f"检测完成！共 {result['total']} 条，"
@@ -200,8 +201,6 @@ def page_upload() -> None:
                     st.session_state.batch_id = result.get("batch_id")
                     st.session_state.latest_results = result.get("results", [])
                     st.session_state._detection_result = None
-                    time.sleep(1.5)
-                    st.rerun()
 
 
 def page_results() -> None:
