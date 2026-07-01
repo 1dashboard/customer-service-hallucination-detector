@@ -217,8 +217,10 @@ def page_results() -> None:
                 cols[1].markdown(f"<span style='color:{'red' if is_hallu else 'green'}'>{status_text}</span>",
                                  unsafe_allow_html=True)
                 cols[2].markdown(row["reason"][:100])
-                cols[3].markdown(f"`{row.get('output_type', '-') or '-'}`")
-                cols[4].markdown(f"`{row.get('confidence', '-')}`")
+                out_type = row["output_type"] or "-"
+                confidence = row["confidence"] or "-"
+                cols[3].markdown(f"`{out_type}`")
+                cols[4].markdown(f"`{confidence}`")
 
                 if cols[5].button("详情", key=f"detail_{row['id']}"):
                     _show_detail(row)
@@ -238,8 +240,8 @@ def _show_detail(row) -> None:
         col1, col2, col3 = st.columns(3)
         is_hallu = row["is_hallucination"]
         col1.metric("是否幻觉", "是" if is_hallu else "否" if is_hallu is not None else "未判定")
-        col2.metric("检测层", row.get("detection_layer") or "-")
-        col3.metric("输出类型", row.get("output_type") or "-")
+        col2.metric("检测层", row["detection_layer"] or "-")
+        col3.metric("输出类型", row["output_type"] or "-")
         st.info(f"**判定依据:** {row['reason']}")
 
 
