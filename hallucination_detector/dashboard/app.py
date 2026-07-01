@@ -150,27 +150,32 @@ def page_upload() -> None:
                         st.session_state._detection_error = None
                         st.session_state._detection_file = None
                         st.session_state._detection_thread = None
+                        st.session_state._result_holder = None
                         st.session_state._uploader_key += 1
                         st.rerun()
 
             # Start or check background thread
             if "_detection_thread" not in st.session_state or st.session_state._detection_thread is None:
-                def _run() -> None:
+                result_holder: dict = {}
+                st.session_state._result_holder = result_holder
+
+                def _run(holder: dict) -> None:
                     payload = json.dumps(data_content, ensure_ascii=False)
                     files = {"file": (file_name, payload.encode("utf-8"), "application/json")}
                     try:
                         resp = requests.post(f"{API_BASE}/api/detect/upload", files=files, timeout=120)
                         if resp.status_code == 200:
-                            st.session_state._detection_result = resp.json()
+                            holder["result"] = resp.json()
                         else:
-                            st.session_state._detection_error = f"API 错误: {resp.status_code}"
+                            holder["error"] = f"API 错误: {resp.status_code}"
                     except Exception as e:
-                        st.session_state._detection_error = f"无法连接 API 服务: {e}"
+                        holder["error"] = f"无法连接 API 服务: {e}"
 
-                st.session_state._detection_thread = threading.Thread(target=_run, daemon=True)
+                st.session_state._detection_thread = threading.Thread(
+                    target=_run, args=(result_holder,), daemon=True,
+                )
                 st.session_state._detection_start = time.time()
                 st.session_state._detection_thread.start()
-                # Rerun so the cancel button becomes clickable
                 st.rerun()
 
             thread = st.session_state._detection_thread
@@ -178,20 +183,21 @@ def page_upload() -> None:
             if thread.is_alive():
                 elapsed = int(time.time() - st.session_state._detection_start)
                 status_text.info(f"⏳ 正在检测 {total} 条回复，已用时 {elapsed}s...")
-                # Auto-rerun every 2 seconds to update progress
                 time.sleep(2)
                 st.rerun()
             else:
-                # Detection finished
+                # Detection finished — read results from plain dict (thread-safe)
                 st.session_state._detection_thread = None
                 st.session_state._detecting = False
 
-                if st.session_state._detection_error:
-                    st.error(st.session_state._detection_error)
+                holder = st.session_state.pop("_result_holder", {})
+                error = holder.get("error")
+                result = holder.get("result")
+
+                if error:
+                    st.error(error)
                     st.info("请确保 FastAPI 服务已启动")
-                    st.session_state._detection_error = None
-                elif st.session_state._detection_result:
-                    result = st.session_state._detection_result
+                elif result:
                     st.balloons()
                     st.toast("✅ 本次检测已完成", icon="✅")
                     st.success(
@@ -200,7 +206,6 @@ def page_upload() -> None:
                     )
                     st.session_state.batch_id = result.get("batch_id")
                     st.session_state.latest_results = result.get("results", [])
-                    st.session_state._detection_result = None
 
 
 def page_results() -> None:
