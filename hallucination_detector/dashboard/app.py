@@ -137,24 +137,7 @@ def page_upload() -> None:
             file_name, data_content = st.session_state._detection_file
             total = len(data_content)
 
-            # Container for detection UI
-            detecting_container = st.container()
-            with detecting_container:
-                col1, col2 = st.columns([3, 1])
-                with col1:
-                    status_text = st.empty()
-                with col2:
-                    if st.button("⏹ 取消检测", use_container_width=True):
-                        st.session_state._detecting = False
-                        st.session_state._detection_result = None
-                        st.session_state._detection_error = None
-                        st.session_state._detection_file = None
-                        st.session_state._detection_thread = None
-                        st.session_state._result_holder = None
-                        st.session_state._uploader_key += 1
-                        st.rerun()
-
-            # Start or check background thread
+            # Start background thread on first entry
             if "_detection_thread" not in st.session_state or st.session_state._detection_thread is None:
                 result_holder: dict = {}
                 st.session_state._result_holder = result_holder
@@ -181,8 +164,18 @@ def page_upload() -> None:
             thread = st.session_state._detection_thread
 
             if thread.is_alive():
-                elapsed = int(time.time() - st.session_state._detection_start)
-                status_text.info(f"⏳ 正在检测 {total} 条回复，已用时 {elapsed}s...")
+                col1, col2 = st.columns([3, 1])
+                with col1:
+                    elapsed = int(time.time() - st.session_state._detection_start)
+                    st.info(f"⏳ 正在检测 {total} 条回复，已用时 {elapsed}s...")
+                with col2:
+                    if st.button("⏹ 取消检测", use_container_width=True):
+                        st.session_state._detecting = False
+                        st.session_state._detection_file = None
+                        st.session_state._detection_thread = None
+                        st.session_state._result_holder = None
+                        st.session_state._uploader_key += 1
+                        st.rerun()
                 time.sleep(2)
                 st.rerun()
             else:
