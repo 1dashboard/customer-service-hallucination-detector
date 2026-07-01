@@ -16,21 +16,21 @@
 
 | 输出类型 | 说明 | 严重程度 |
 |---|---|---|
-| `param_fabrication` | 参数编造：产品参数被篡改 | 高 |
-| `policy_fabrication` | 政策编造：编造不存在的政策 | 高 |
-| `policy_deviation` | 政策偏差：部分正确部分错误 | 中 |
-| `capability_overreach` | 能力越界：假装具备不具备的能力 | 高 |
-| `promotion_fabrication` | 优惠编造：编造不存在的优惠活动 | 中 |
-| `info_fabrication` | 信息编造：凭空编造信息 | 高 |
-| `safety_misleading` | 安全误导：忽略安全风险做肯定承诺 | 严重 |
-| `info_omission` | 信息遗漏：遗漏关键限制信息 | 低 |
+| `参数编造` | 产品参数被篡改 | 高 |
+| `政策编造` | 编造不存在的政策 | 高 |
+| `政策偏差` | 部分正确部分错误 | 中 |
+| `能力越界` | 假装具备不具备的能力 | 高 |
+| `优惠编造` | 编造不存在的优惠活动 | 中 |
+| `信息编造` | 凭空编造信息 | 高 |
+| `安全误导` | 忽略安全风险做肯定承诺 | 严重 |
+| `信息遗漏` | 遗漏关键限制信息 | 低 |
 
 ### 检测层 → 输出层映射
 
 ```
-L1 (直接矛盾) → param_fabrication / policy_fabrication / policy_deviation / safety_misleading
-L2 (能力越界) → capability_overreach
-L3 (无据陈述) → promotion_fabrication / info_fabrication / safety_misleading / info_omission
+直接矛盾 → 参数编造 / 政策编造 / 政策偏差 / 安全误导
+能力越界 → 能力越界
+无据陈述 → 优惠编造 / 信息编造 / 安全误导 / 信息遗漏
 ```
 
 ## 检测方法

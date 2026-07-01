@@ -42,14 +42,17 @@ def classify_llm_result(result: DetectionResult, llm_subtype: str = "") -> Detec
         return result
 
     subtype_map = {
-        "safety_misleading": OutputType.SAFETY_MISLEADING,
-        "promotion_fabrication": OutputType.PROMOTION_FABRICATION,
-        "info_fabrication": OutputType.INFO_FABRICATION,
-        "info_omission": OutputType.INFO_OMISSION,
-        "policy_deviation": OutputType.POLICY_DEVIATION,
-        "policy_fabrication": OutputType.POLICY_FABRICATION,
-        "param_fabrication": OutputType.PARAM_FABRICATION,
-        "capability_overreach": OutputType.CAPABILITY_OVERREACH,
+        "安全误导": OutputType.SAFETY_MISLEADING,
+        "优惠编造": OutputType.PROMOTION_FABRICATION,
+        "信息编造": OutputType.INFO_FABRICATION,
+        "信息遗漏": OutputType.INFO_OMISSION,
+        "政策偏差": OutputType.POLICY_DEVIATION,
+        "政策编造": OutputType.POLICY_FABRICATION,
+        "参数编造": OutputType.PARAM_FABRICATION,
+        "能力越界": OutputType.CAPABILITY_OVERREACH,
+        # Also accept LLM output subtypes
+        "直接矛盾": OutputType.PARAM_FABRICATION,
+        "凭空编造": OutputType.INFO_FABRICATION,
     }
     result.output_type = subtype_map.get(llm_subtype, OutputType.INFO_FABRICATION)
     return result

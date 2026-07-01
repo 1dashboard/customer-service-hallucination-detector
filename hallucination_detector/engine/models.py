@@ -8,20 +8,20 @@ from pydantic import BaseModel, Field
 
 
 class DetectionLayer(str, Enum):
-    L1_DIRECT_CONTRADICTION = "L1"
-    L2_CAPABILITY_OVERREACH = "L2"
-    L3_UNSUPPORTED_CLAIM = "L3"
+    L1_DIRECT_CONTRADICTION = "直接矛盾"
+    L2_CAPABILITY_OVERREACH = "能力越界"
+    L3_UNSUPPORTED_CLAIM = "无据陈述"
 
 
 class OutputType(str, Enum):
-    POLICY_FABRICATION = "policy_fabrication"
-    PARAM_FABRICATION = "param_fabrication"
-    POLICY_DEVIATION = "policy_deviation"
-    CAPABILITY_OVERREACH = "capability_overreach"
-    PROMOTION_FABRICATION = "promotion_fabrication"
-    INFO_FABRICATION = "info_fabrication"
-    SAFETY_MISLEADING = "safety_misleading"
-    INFO_OMISSION = "info_omission"
+    POLICY_FABRICATION = "政策编造"
+    PARAM_FABRICATION = "参数编造"
+    POLICY_DEVIATION = "政策偏差"
+    CAPABILITY_OVERREACH = "能力越界"
+    PROMOTION_FABRICATION = "优惠编造"
+    INFO_FABRICATION = "信息编造"
+    SAFETY_MISLEADING = "安全误导"
+    INFO_OMISSION = "信息遗漏"
 
 
 class Confidence(str, Enum):

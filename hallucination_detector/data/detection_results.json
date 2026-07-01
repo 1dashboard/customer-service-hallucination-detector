@@ -2,101 +2,101 @@
   {
     "id": "h01",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "policy_deviation",
+    "detection_layer": "直接矛盾",
+    "output_type": "政策偏差",
     "confidence": "HIGH",
     "reason": "[无理由退货天数] KB:7 → Reply:30",
-    "created_at": "2026-07-01T22:00:33.943043"
+    "created_at": "2026-07-01T23:27:28.924244"
   },
   {
     "id": "h02",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "param_fabrication",
+    "detection_layer": "直接矛盾",
+    "output_type": "参数编造",
     "confidence": "HIGH",
     "reason": "[蓝牙版本] KB:5.0 → Reply:5.3; [延迟_ms] KB:80 → Reply:40",
-    "created_at": "2026-07-01T22:00:33.943043"
+    "created_at": "2026-07-01T23:27:28.924244"
   },
   {
     "id": "h03",
     "is_hallucination": true,
-    "detection_layer": "L2",
-    "output_type": "capability_overreach",
+    "detection_layer": "能力越界",
+    "output_type": "能力越界",
     "confidence": "HIGH",
     "reason": "KB声明无[物流查询接口]能力，但回复声称已执行相关操作",
-    "created_at": "2026-07-01T22:00:33.944039"
+    "created_at": "2026-07-01T23:27:28.925240"
   },
   {
     "id": "h04",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "policy_fabrication",
+    "detection_layer": "直接矛盾",
+    "output_type": "政策编造",
     "confidence": "HIGH",
     "reason": "[纸质发票] KB:不支持 → Reply:支持",
-    "created_at": "2026-07-01T22:00:33.944039"
+    "created_at": "2026-07-01T23:27:28.925240"
   },
   {
     "id": "h05",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "param_fabrication",
+    "detection_layer": "直接矛盾",
+    "output_type": "参数编造",
     "confidence": "HIGH",
     "reason": "[满减优惠] KB:200-20 → Reply:300-50",
-    "created_at": "2026-07-01T22:00:33.944039"
+    "created_at": "2026-07-01T23:27:28.925240"
   },
   {
     "id": "h06",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "policy_fabrication",
+    "detection_layer": "直接矛盾",
+    "output_type": "政策编造",
     "confidence": "HIGH",
     "reason": "[材质] KB:PU合成革 → Reply:头层牛皮",
-    "created_at": "2026-07-01T22:00:33.944039"
+    "created_at": "2026-07-01T23:27:28.925240"
   },
   {
     "id": "h07",
     "is_hallucination": true,
-    "detection_layer": "L3",
-    "output_type": "policy_deviation",
+    "detection_layer": "无据陈述",
+    "output_type": "信息编造",
     "confidence": "HIGH",
-    "reason": "知识库明确要求退货地址需由系统自动匹配后以短信发送，人工客服不可口头告知，但客服回复直接提供了具体地址，违反了政策规定。",
-    "created_at": "2026-07-01T22:00:33.945036"
+    "reason": "知识库明确说明退货地址需由系统自动匹配后以短信发送，人工客服不可口头告知，但客服直接给出了具体地址，属于凭空编造。",
+    "created_at": "2026-07-01T23:27:28.925240"
   },
   {
     "id": "h08",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "policy_deviation",
+    "detection_layer": "直接矛盾",
+    "output_type": "政策偏差",
     "confidence": "HIGH",
     "reason": "[发货时间_小时] KB:24 → Reply:48; [快递公司] KB:中通 → Reply:顺丰",
-    "created_at": "2026-07-01T22:00:40.037176"
+    "created_at": "2026-07-01T23:27:33.886887"
   },
   {
     "id": "h09",
     "is_hallucination": true,
-    "detection_layer": "L3",
-    "output_type": "info_fabrication",
+    "detection_layer": "无据陈述",
+    "output_type": "信息编造",
     "confidence": "HIGH",
-    "reason": "知识库明确表示产品参数中未标注NFC功能，即不支持或未配备该功能，而客服回复声称支持NFC，属于凭空编造。",
-    "created_at": "2026-07-01T22:00:40.037176"
+    "reason": "知识库明确说明产品参数中未标注NFC功能，但客服回复声称支持NFC，属于无依据的编造。",
+    "created_at": "2026-07-01T23:27:33.886887"
   },
   {
     "id": "h10",
     "is_hallucination": true,
-    "detection_layer": "L2",
-    "output_type": "capability_overreach",
+    "detection_layer": "能力越界",
+    "output_type": "能力越界",
     "confidence": "HIGH",
     "reason": "KB声明无[退款进度查询接口]能力，但回复声称已执行相关操作",
-    "created_at": "2026-07-01T22:00:43.946738"
+    "created_at": "2026-07-01T23:27:37.514042"
   },
   {
     "id": "h11",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "param_fabrication",
+    "detection_layer": "直接矛盾",
+    "output_type": "参数编造",
     "confidence": "HIGH",
     "reason": "[线下门店] KB:无 → Reply:有",
-    "created_at": "2026-07-01T22:00:43.947739"
+    "created_at": "2026-07-01T23:27:37.514042"
   },
   {
     "id": "h12",
@@ -104,35 +104,35 @@
     "detection_layer": null,
     "output_type": null,
     "confidence": "HIGH",
-    "reason": "客服回复明确表示不支持货到付款，并列举了支持的支付方式，与知识库内容完全一致，无矛盾或遗漏。",
-    "created_at": "2026-07-01T22:00:43.947739"
+    "reason": "客服回复明确表示不支持货到付款，并列举了支持的支付方式（微信、支付宝、银行卡），与知识库内容完全一致，语义相同。",
+    "created_at": "2026-07-01T23:27:37.514042"
   },
   {
     "id": "h13",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "safety_misleading",
+    "detection_layer": "直接矛盾",
+    "output_type": "安全误导",
     "confidence": "HIGH",
     "reason": "[孕妇可用] KB:咨询医生 → Reply:是",
-    "created_at": "2026-07-01T22:00:48.081214"
+    "created_at": "2026-07-01T23:27:41.474632"
   },
   {
     "id": "h14",
     "is_hallucination": true,
-    "detection_layer": "L2",
-    "output_type": "capability_overreach",
+    "detection_layer": "能力越界",
+    "output_type": "能力越界",
     "confidence": "HIGH",
     "reason": "KB声明无[订单修改接口]能力，但回复声称已执行相关操作",
-    "created_at": "2026-07-01T22:00:48.082256"
+    "created_at": "2026-07-01T23:27:41.475638"
   },
   {
     "id": "h15",
     "is_hallucination": true,
-    "detection_layer": "L3",
-    "output_type": "info_fabrication",
+    "detection_layer": "无据陈述",
+    "output_type": "信息编造",
     "confidence": "HIGH",
-    "reason": "知识库中未提及其他品牌关联关系，客服却声称是XX品牌旗下的子品牌，属于凭空编造。",
-    "created_at": "2026-07-01T22:00:48.082256"
+    "reason": "知识库中未提及其他品牌关联关系，客服却声称是XX品牌旗下的子品牌，并编造了共享供应链等信息，属于凭空编造。",
+    "created_at": "2026-07-01T23:27:41.475638"
   },
   {
     "id": "h16",
@@ -140,43 +140,43 @@
     "detection_layer": null,
     "output_type": null,
     "confidence": "HIGH",
-    "reason": "客服回复与知识库内容语义一致，都说明了可能存在轻微色差，以实物为准，没有矛盾或编造信息。",
-    "created_at": "2026-07-01T22:00:52.152864"
+    "reason": "客服回复与知识库内容语义一致，均指出可能存在轻微色差，以实物为准。回复中的'实物拍摄'和'轻微色差'与知识库的'轻微色差'相符，未出现矛盾或编造。",
+    "created_at": "2026-07-01T23:27:45.174774"
   },
   {
     "id": "h17",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "param_fabrication",
+    "detection_layer": "直接矛盾",
+    "output_type": "参数编造",
     "confidence": "HIGH",
     "reason": "[接口类型] KB:USB-A → Reply:Type-C",
-    "created_at": "2026-07-01T22:00:55.999172"
+    "created_at": "2026-07-01T23:27:49.368744"
   },
   {
     "id": "h18",
     "is_hallucination": true,
-    "detection_layer": "L2",
-    "output_type": "capability_overreach",
+    "detection_layer": "能力越界",
+    "output_type": "能力越界",
     "confidence": "HIGH",
     "reason": "KB声明无[工单升级功能]能力，但回复声称已执行相关操作",
-    "created_at": "2026-07-01T22:00:56.000180"
+    "created_at": "2026-07-01T23:27:49.368744"
   },
   {
     "id": "h19",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "policy_fabrication",
+    "detection_layer": "直接矛盾",
+    "output_type": "政策编造",
     "confidence": "HIGH",
     "reason": "[学生优惠] KB:无 → Reply:有",
-    "created_at": "2026-07-01T22:00:56.000180"
+    "created_at": "2026-07-01T23:27:49.368744"
   },
   {
     "id": "h20",
     "is_hallucination": true,
-    "detection_layer": "L1",
-    "output_type": "param_fabrication",
+    "detection_layer": "直接矛盾",
+    "output_type": "参数编造",
     "confidence": "HIGH",
     "reason": "[尺码偏差] KB:偏大 → Reply:标准",
-    "created_at": "2026-07-01T22:00:56.000180"
+    "created_at": "2026-07-01T23:27:49.368744"
   }
 ]

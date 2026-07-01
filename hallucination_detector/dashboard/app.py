@@ -223,11 +223,8 @@ def page_results() -> None:
         with col1:
             type_filter = st.selectbox(
                 "幻觉类型",
-                ["全部"] + [
-                    "policy_fabrication", "param_fabrication", "policy_deviation",
-                    "capability_overreach", "promotion_fabrication", "info_fabrication",
-                    "safety_misleading", "info_omission",
-                ],
+                ["全部", "政策编造", "参数编造", "政策偏差", "能力越界",
+                 "优惠编造", "信息编造", "安全误导", "信息遗漏"],
             )
         with col2:
             hallucination_filter = st.selectbox(
