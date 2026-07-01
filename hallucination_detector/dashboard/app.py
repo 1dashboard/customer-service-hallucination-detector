@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import json
 import sys
+import threading
+import time
 from pathlib import Path
 
 import pandas as pd
+import requests
 import streamlit as st
 
 # Add parent dir to path
@@ -117,26 +120,81 @@ def page_upload() -> None:
             st.dataframe(pd.DataFrame(preview), use_container_width=True, hide_index=True)
 
         if st.button("🚀 开始检测", type="primary", use_container_width=True):
-            with st.spinner(f"正在检测 {len(data)} 条回复..."):
-                import requests
+            st.session_state._detecting = True
+            st.session_state._detection_error = None
+            st.session_state._detection_result = None
+            st.session_state._detection_file = (uploaded_file.name, data)
+            st.rerun()
 
-                files = {"file": (uploaded_file.name, json.dumps(data, ensure_ascii=False).encode("utf-8"), "application/json")}
-                try:
-                    resp = requests.post(f"{API_BASE}/api/detect/upload", files=files, timeout=120)
-                    if resp.status_code == 200:
-                        result = resp.json()
-                        st.success(
-                            f"检测完成！共 {result['total']} 条，"
-                            f"发现 {result['hallucination_count']} 条幻觉"
-                        )
-                        st.session_state.batch_id = result.get("batch_id")
-                        st.session_state.latest_results = result.get("results", [])
+        # ── Detecting state ─────────────────────────────────────────
+        if st.session_state.get("_detecting"):
+            file_name, data_content = st.session_state._detection_file
+            total = len(data_content)
+
+            # Container for detection UI
+            detecting_container = st.container()
+            with detecting_container:
+                col1, col2 = st.columns([3, 1])
+                with col1:
+                    status_text = st.empty()
+                with col2:
+                    if st.button("⏹ 取消检测", use_container_width=True):
+                        st.session_state._detecting = False
+                        st.session_state._detection_result = None
+                        st.session_state._detection_error = None
+                        st.warning("检测已取消，已回到上传页面")
+                        time.sleep(0.5)
                         st.rerun()
-                    else:
-                        st.error(f"API 错误: {resp.status_code} - {resp.text}")
-                except Exception as e:
-                    st.error(f"无法连接 API 服务 ({API_BASE}): {e}")
-                    st.info("请确保 FastAPI 服务已启动: `uvicorn api.main:app --port 8000`")
+
+            # Start or check background thread
+            if "_detection_thread" not in st.session_state or st.session_state._detection_thread is None:
+                def _run() -> None:
+                    payload = json.dumps(data_content, ensure_ascii=False)
+                    files = {"file": (file_name, payload.encode("utf-8"), "application/json")}
+                    try:
+                        resp = requests.post(f"{API_BASE}/api/detect/upload", files=files, timeout=120)
+                        if resp.status_code == 200:
+                            st.session_state._detection_result = resp.json()
+                        else:
+                            st.session_state._detection_error = f"API 错误: {resp.status_code}"
+                    except Exception as e:
+                        st.session_state._detection_error = f"无法连接 API 服务: {e}"
+
+                st.session_state._detection_thread = threading.Thread(target=_run, daemon=True)
+                st.session_state._detection_start = time.time()
+                st.session_state._detection_thread.start()
+                # Rerun so the cancel button becomes clickable
+                st.rerun()
+
+            thread = st.session_state._detection_thread
+
+            if thread.is_alive():
+                elapsed = int(time.time() - st.session_state._detection_start)
+                status_text.info(f"⏳ 正在检测 {total} 条回复，已用时 {elapsed}s...")
+                # Auto-rerun every 2 seconds to update progress
+                time.sleep(2)
+                st.rerun()
+            else:
+                # Detection finished
+                st.session_state._detection_thread = None
+                st.session_state._detecting = False
+
+                if st.session_state._detection_error:
+                    st.error(st.session_state._detection_error)
+                    st.info("请确保 FastAPI 服务已启动")
+                    st.session_state._detection_error = None
+                elif st.session_state._detection_result:
+                    result = st.session_state._detection_result
+                    st.toast("✅ 本次检测已完成", icon="✅")
+                    st.success(
+                        f"检测完成！共 {result['total']} 条，"
+                        f"发现 {result['hallucination_count']} 条幻觉"
+                    )
+                    st.session_state.batch_id = result.get("batch_id")
+                    st.session_state.latest_results = result.get("results", [])
+                    st.session_state._detection_result = None
+                    time.sleep(1.5)
+                    st.rerun()
 
 
 def page_results() -> None:
