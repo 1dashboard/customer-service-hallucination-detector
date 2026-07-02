@@ -100,8 +100,81 @@ def page_batch_history() -> None:
         )
         st.session_state.batch_id = selected_id
 
+        # Show results for selected batch
+        _show_batch_results(conn, selected_id)
+
     finally:
         conn.close()
+
+
+def _show_batch_results(conn, batch_id: int) -> None:
+    """Display detection results for a given batch with filters."""
+    st.divider()
+    st.subheader(f"批次 #{batch_id} 检测详情")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        type_filter = st.selectbox(
+            "幻觉类型",
+            ["全部", "政策编造", "参数编造", "政策偏差", "能力越界",
+             "优惠编造", "信息编造", "安全误导", "信息遗漏"],
+            key=f"type_{batch_id}",
+        )
+    with col2:
+        hallucination_filter = st.selectbox(
+            "是否幻觉", ["全部", "是", "否"], key=f"hallu_{batch_id}",
+        )
+    with col3:
+        search = st.text_input("搜索关键词", placeholder="输入回复内容关键词...", key=f"search_{batch_id}")
+
+    conditions = ["batch_id = ?"]
+    params: list = [batch_id]
+
+    if type_filter != "全部":
+        conditions.append("output_type = ?")
+        params.append(type_filter)
+    if hallucination_filter == "是":
+        conditions.append("is_hallucination = 1")
+    elif hallucination_filter == "否":
+        conditions.append("is_hallucination = 0")
+    if search:
+        conditions.append("(system_reply LIKE ? OR user_question LIKE ?)")
+        search_param = f"%{search}%"
+        params.extend([search_param, search_param])
+
+    where = " AND ".join(conditions)
+    rows = conn.execute(
+        f"SELECT * FROM detection_results WHERE {where} ORDER BY id",
+        params,
+    ).fetchall()
+
+    if not rows:
+        st.info("没有匹配的结果。")
+        return
+
+    total = len(rows)
+    hallu = sum(1 for r in rows if r["is_hallucination"])
+    st.metric("筛选结果", f"{total} 条", f"幻觉 {hallu} 条 ({hallu/total*100:.0f}%)" if total else "")
+
+    for row in rows:
+        is_hallu = row["is_hallucination"]
+        status_text = "⚠️ 幻觉" if is_hallu else ("✅ 正常" if is_hallu is not None else "❓ 未判定")
+
+        with st.container():
+            cols = st.columns([1, 2, 6, 2, 2, 1])
+            cols[0].markdown(f"**{row['reply_id']}**")
+            cols[1].markdown(
+                f"<span style='color:{'red' if is_hallu else 'green'}'>{status_text}</span>",
+                unsafe_allow_html=True,
+            )
+            cols[2].markdown((row["reason"] or "")[:100])
+            out_type = row["output_type"] or "-"
+            confidence = row["confidence"] or "-"
+            cols[3].markdown(f"`{out_type}`")
+            cols[4].markdown(f"`{confidence}`")
+
+            if cols[5].button("详情", key=f"detail_batch_{batch_id}_{row['id']}"):
+                _show_detail(row)
 
 
 def page_upload() -> None:
@@ -244,71 +317,7 @@ def page_results() -> None:
                 st.info("暂无检测结果。请先上传数据进行检测。")
                 return
 
-        # Filters
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            type_filter = st.selectbox(
-                "幻觉类型",
-                ["全部", "政策编造", "参数编造", "政策偏差", "能力越界",
-                 "优惠编造", "信息编造", "安全误导", "信息遗漏"],
-            )
-        with col2:
-            hallucination_filter = st.selectbox(
-                "是否幻觉", ["全部", "是", "否"]
-            )
-        with col3:
-            search = st.text_input("搜索关键词", placeholder="输入回复内容关键词...")
-
-        # Build query
-        conditions = ["batch_id = ?"]
-        params: list = [batch_id]
-
-        if type_filter != "全部":
-            conditions.append("output_type = ?")
-            params.append(type_filter)
-        if hallucination_filter == "是":
-            conditions.append("is_hallucination = 1")
-        elif hallucination_filter == "否":
-            conditions.append("is_hallucination = 0")
-        if search:
-            conditions.append("(system_reply LIKE ? OR user_question LIKE ?)")
-            search_param = f"%{search}%"
-            params.extend([search_param, search_param])
-
-        where = " AND ".join(conditions)
-        rows = conn.execute(
-            f"SELECT * FROM detection_results WHERE {where} ORDER BY id",
-            params,
-        ).fetchall()
-
-        if not rows:
-            st.info("没有匹配的结果。")
-            return
-
-        # Stats
-        total = len(rows)
-        hallu = sum(1 for r in rows if r["is_hallucination"])
-        st.metric("筛选结果", f"{total} 条", f"幻觉 {hallu} 条 ({hallu/total*100:.0f}%)" if total else "")
-
-        # Table
-        for row in rows:
-            is_hallu = row["is_hallucination"]
-            bg_color = "#ffcccc" if is_hallu else ("#ccffcc" if is_hallu is not None else "#f0f0f0")
-            status_text = "⚠️ 幻觉" if is_hallu else ("✅ 正常" if is_hallu is not None else "❓ 未判定")
-
-            with st.container():
-                cols = st.columns([1, 2, 6, 2, 2, 1])
-                cols[0].markdown(f"**{row['reply_id']}**")
-                cols[1].markdown(f"<span style='color:{'red' if is_hallu else 'green'}'>{status_text}</span>",
-                                 unsafe_allow_html=True)
-                cols[2].markdown(row["reason"][:100])
-                out_type = row["output_type"] or "-"
-                confidence = row["confidence"] or "-"
-                cols[3].markdown(f"`{out_type}`")
-                cols[4].markdown(f"`{confidence}`")
-
-                if cols[5].button("详情", key=f"detail_{row['id']}"):
-                    _show_detail(row)
+        _show_batch_results(conn, batch_id)
 
     finally:
         conn.close()
