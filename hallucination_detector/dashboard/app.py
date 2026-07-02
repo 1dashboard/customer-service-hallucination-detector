@@ -40,6 +40,11 @@ def main() -> None:
         "误判分析": page_misclassification,
     }
 
+    # Handle programmatic navigation before widget instantiation
+    if nav := st.session_state.pop("_nav_request", None):
+        if nav in pages:
+            st.session_state.nav_page = nav
+
     with st.sidebar:
         st.title("导航")
         page = st.radio("选择页面", list(pages.keys()), key="nav_page")
@@ -208,7 +213,7 @@ def page_upload() -> None:
             st.session_state.latest_results = result.get("results", [])
             if st.button("📊 查看本次检测结果", use_container_width=True, key="goto_results"):
                 del st.session_state["_detection_result"]
-                st.session_state.nav_page = "结果浏览"
+                st.session_state._nav_request = "结果浏览"
                 st.rerun()
 
 
