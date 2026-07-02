@@ -187,20 +187,29 @@ def page_upload() -> None:
                 result = holder.get("result")
 
                 if error:
-                    st.error(error)
-                    st.info("请确保 FastAPI 服务已启动")
+                    st.session_state._detection_error = error
                 elif result:
-                    st.balloons()
-                    st.toast("✅ 本次检测已完成", icon="✅")
-                    st.success(
-                        f"检测完成！共 {result['total']} 条，"
-                        f"发现 {result['hallucination_count']} 条幻觉"
-                    )
-                    st.session_state.batch_id = result.get("batch_id")
-                    st.session_state.latest_results = result.get("results", [])
-                    if st.button("📊 查看本次检测结果", use_container_width=True):
-                        st.session_state.nav_page = "结果浏览"
-                        st.rerun()
+                    st.session_state._detection_result = result
+                st.rerun()
+
+        # ── Show detection result outside the detecting block ──────────
+        if error := st.session_state.pop("_detection_error", None):
+            st.error(error)
+            st.info("请确保 FastAPI 服务已启动")
+
+        if result := st.session_state.get("_detection_result"):
+            st.balloons()
+            st.toast("✅ 本次检测已完成", icon="✅")
+            st.success(
+                f"检测完成！共 {result['total']} 条，"
+                f"发现 {result['hallucination_count']} 条幻觉"
+            )
+            st.session_state.batch_id = result.get("batch_id")
+            st.session_state.latest_results = result.get("results", [])
+            if st.button("📊 查看本次检测结果", use_container_width=True, key="goto_results"):
+                del st.session_state["_detection_result"]
+                st.session_state.nav_page = "结果浏览"
+                st.rerun()
 
 
 def page_results() -> None:
