@@ -37,12 +37,12 @@ def detect_single(item: DetectionInput) -> DetectionResult:
     if llm_result["is_hallucination"] is True:
         result.is_hallucination = True
         result.detection_layer = DetectionLayer.L3_UNSUPPORTED_CLAIM
-        result.confidence = Confidence[llm_result.get("confidence", "MEDIUM")]
+        result.confidence = Confidence(llm_result.get("confidence", "中"))
         result.reason = llm_result["reason"]
         result = classify_llm_result(result, llm_result.get("subtype", ""))
     elif llm_result["is_hallucination"] is False:
         result.is_hallucination = False
-        result.confidence = Confidence[llm_result.get("confidence", "MEDIUM")]
+        result.confidence = Confidence(llm_result.get("confidence", "中"))
         result.reason = llm_result["reason"]
         result.detection_layer = None
         result.output_type = None

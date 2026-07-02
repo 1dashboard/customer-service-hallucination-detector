@@ -25,9 +25,9 @@ class OutputType(str, Enum):
 
 
 class Confidence(str, Enum):
-    HIGH = "HIGH"
-    MEDIUM = "MEDIUM"
-    LOW = "LOW"
+    HIGH = "高"
+    MEDIUM = "中"
+    LOW = "低"
 
 
 class DetectionInput(BaseModel):
