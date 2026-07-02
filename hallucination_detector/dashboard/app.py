@@ -92,12 +92,9 @@ def page_batch_history() -> None:
 def page_upload() -> None:
     st.header("📤 上传数据并检测")
 
-    if "_uploader_key" not in st.session_state:
-        st.session_state._uploader_key = 0
-
     uploaded_file = st.file_uploader(
         "上传 replies.json 文件", type=["json"],
-        key=f"file_uploader_{st.session_state._uploader_key}",
+        key="file_uploader",
     )
 
     if uploaded_file is not None:
@@ -174,7 +171,9 @@ def page_upload() -> None:
                         st.session_state._detection_file = None
                         st.session_state._detection_thread = None
                         st.session_state._result_holder = None
-                        st.session_state._uploader_key += 1
+                        # Reset file uploader
+                        if "file_uploader" in st.session_state:
+                            del st.session_state["file_uploader"]
                         st.rerun()
                 time.sleep(2)
                 st.rerun()
