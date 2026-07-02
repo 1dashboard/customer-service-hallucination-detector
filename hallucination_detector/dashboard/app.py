@@ -42,7 +42,7 @@ def main() -> None:
 
     with st.sidebar:
         st.title("导航")
-        page = st.radio("选择页面", list(pages.keys()))
+        page = st.radio("选择页面", list(pages.keys()), key="nav_page")
 
     pages[page]()
 
@@ -198,6 +198,9 @@ def page_upload() -> None:
                     )
                     st.session_state.batch_id = result.get("batch_id")
                     st.session_state.latest_results = result.get("results", [])
+                    if st.button("📊 查看本次检测结果", use_container_width=True):
+                        st.session_state.nav_page = "结果浏览"
+                        st.rerun()
 
 
 def page_results() -> None:
