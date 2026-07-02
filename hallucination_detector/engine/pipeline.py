@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -54,8 +55,11 @@ def detect_single(item: DetectionInput) -> DetectionResult:
 
 
 def detect_batch(items: list[dict]) -> list[DetectionResult]:
-    """Run detection on a batch of reply items."""
-    results: list[DetectionResult] = []
+    """Run detection on a batch of reply items with concurrent LLM calls."""
+    # Phase 1: Stage 1 (rules) for all items — fast, no API calls
+    stage1_results: list[DetectionResult] = []
+    llm_queue: list[tuple[int, DetectionInput, DetectionResult]] = []  # (index, input, stage1_result)
+
     for i, item in enumerate(items):
         input_item = DetectionInput(
             id=item.get("id", str(i)),
@@ -63,10 +67,53 @@ def detect_batch(items: list[dict]) -> list[DetectionResult]:
             system_reply=item["system_reply"],
             knowledge_base=item["knowledge_base"],
         )
-        print(f"  [{i+1}/{len(items)}] Processing {input_item.id}...")
-        result = detect_single(input_item)
-        results.append(result)
-    return results
+        print(f"  [{i+1}/{len(items)}] Stage1: {input_item.id}...")
+        result = run_stage1(input_item.id, input_item.user_question, input_item.system_reply, input_item.knowledge_base)
+        result = classify(result, input_item.user_question, input_item.knowledge_base)
+
+        if result.confidence == Confidence.HIGH and result.is_hallucination is True:
+            # Stage 1 is confident, no LLM needed
+            stage1_results.append(result)
+        else:
+            stage1_results.append(result)
+            llm_queue.append((i, input_item, result))
+
+    # Phase 2: Concurrent LLM judgment for items that need it
+    if llm_queue:
+        print(f"  Running LLM judgment on {len(llm_queue)} items (concurrent, max 5)...")
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            futures = {}
+            for idx, input_item, _stage1_result in llm_queue:
+                future = executor.submit(
+                    judge,
+                    input_item.id,
+                    input_item.user_question,
+                    input_item.system_reply,
+                    input_item.knowledge_base,
+                )
+                futures[future] = idx
+
+            for future in as_completed(futures):
+                idx = futures[future]
+                llm_result = future.result()
+                result = stage1_results[idx]
+
+                if llm_result["is_hallucination"] is True:
+                    result.is_hallucination = True
+                    result.detection_layer = DetectionLayer.L3_UNSUPPORTED_CLAIM
+                    result.confidence = Confidence(llm_result.get("confidence", "中"))
+                    result.reason = llm_result["reason"]
+                    result = classify_llm_result(result, llm_result.get("subtype", ""))
+                elif llm_result["is_hallucination"] is False:
+                    result.is_hallucination = False
+                    result.confidence = Confidence(llm_result.get("confidence", "中"))
+                    result.reason = llm_result["reason"]
+                    result.detection_layer = None
+                    result.output_type = None
+
+                stage1_results[idx] = result
+
+    return stage1_results
 
 
 def run_and_save(
