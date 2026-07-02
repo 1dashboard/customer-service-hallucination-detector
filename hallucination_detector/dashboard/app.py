@@ -203,7 +203,6 @@ def page_upload() -> None:
             st.info("请确保 FastAPI 服务已启动")
 
         if result := st.session_state.get("_detection_result"):
-            st.balloons()
             st.toast("✅ 本次检测已完成", icon="✅")
             st.success(
                 f"检测完成！共 {result['total']} 条，"
