@@ -1,0 +1,182 @@
+- generic [ref=e2]:
+  - generic [ref=e11]:
+    - heading "导航" [level=1] [ref=e15]
+    - generic [ref=e17]:
+      - paragraph [ref=e21]: 选择页面
+      - radiogroup "选择页面" [ref=e22] [cursor=pointer]:
+        - generic [ref=e23]:
+          - radio "批次管理" [checked]
+          - paragraph [ref=e28]: 批次管理
+        - generic [ref=e29]:
+          - radio "上传检测"
+          - paragraph [ref=e34]: 上传检测
+        - generic [ref=e35]:
+          - radio "结果浏览"
+          - paragraph [ref=e40]: 结果浏览
+        - generic [ref=e41]:
+          - radio "评估分析"
+          - paragraph [ref=e46]: 评估分析
+        - generic [ref=e47]:
+          - radio "误判分析"
+          - paragraph [ref=e52]: 误判分析
+    - separator [ref=e57]
+    - generic [ref=e60] [cursor=pointer]:
+      - checkbox "深色模式" [checked]
+      - paragraph [ref=e66]: 深色模式
+  - generic [ref=e3]:
+    - banner [ref=e69]:
+      - generic [ref=e72]:
+        - button "Deploy" [ref=e74] [cursor=pointer]:
+          - generic [ref=e76]: Deploy
+        - button "Main menu" [ref=e78] [cursor=pointer]:
+          - img [ref=e79]
+    - generic [ref=e82]:
+      - heading "客服回复幻觉检测系统" [level=1] [ref=e87]:
+        - text: 客服回复幻觉检测系统
+        - generic [ref=e88]:
+          - link "Link to heading":
+            - /url: "#2e0e19c"
+            - img
+      - paragraph [ref=e93]: 智能检测客服回复中的政策编造、参数错误和能力越界等问题
+      - heading "检测批次历史" [level=2] [ref=e100]:
+        - text: 检测批次历史
+        - generic [ref=e101]:
+          - link "Link to heading":
+            - /url: "#a782cf22"
+            - img
+      - generic [ref=e103]:
+        - generic [ref=e110]:
+          - generic [ref=e111]: 总批次数
+          - generic [ref=e112]: "2"
+        - generic [ref=e119]:
+          - generic [ref=e120]: 总检测数
+          - generic [ref=e121]: "28"
+        - generic [ref=e128]:
+          - generic [ref=e129]: 总幻觉数
+          - generic [ref=e130]: "26"
+        - generic [ref=e137]:
+          - generic [ref=e138]: 平均幻觉率
+          - generic [ref=e139]: 92.9%
+      - generic [ref=e146]:
+        - button "Show/hide columns" [ref=e150] [cursor=pointer]:
+          - img [ref=e151]
+        - button "Download as CSV" [ref=e156] [cursor=pointer]:
+          - img [ref=e157]
+        - button "Search" [ref=e162] [cursor=pointer]:
+          - img [ref=e163]
+        - button "Fullscreen" [ref=e168] [cursor=pointer]:
+          - img [ref=e169]
+      - generic [ref=e188]:
+        - paragraph [ref=e192]: 选择批次查看详情
+        - generic [ref=e194]:
+          - generic [ref=e195]:
+            - generic [ref=e196]: "批次 #2"
+            - 'combobox "Selected 批次 #2. 选择批次查看详情" [ref=e198]'
+          - img "open" [ref=e200]
+      - separator [ref=e206]
+      - 'heading "批次 #2 检测详情" [level=3] [ref=e211]':
+        - text: "批次 #2 检测详情"
+        - generic [ref=e212]:
+          - link "Link to heading":
+            - /url: "#2"
+            - img
+      - generic [ref=e221]:
+        - generic [ref=e225]:
+          - paragraph [ref=e229]: 幻觉类型
+          - generic [ref=e231]:
+            - generic [ref=e232]:
+              - generic [ref=e233]: 全部
+              - combobox "Selected 全部. 幻觉类型" [ref=e235]
+            - img "open" [ref=e237]
+        - generic [ref=e242]:
+          - paragraph [ref=e246]: 是否幻觉
+          - generic [ref=e248]:
+            - generic [ref=e249]:
+              - generic [ref=e250]: 全部
+              - combobox "Selected 全部. 是否幻觉" [ref=e252]
+            - img "open" [ref=e254]
+        - generic [ref=e259]:
+          - paragraph [ref=e263]: 搜索关键词
+          - textbox "搜索关键词" [ref=e266]:
+            - /placeholder: 输入回复内容关键词...
+      - generic [ref=e270]:
+        - button "导出 JSON" [ref=e275] [cursor=pointer]:
+          - paragraph [ref=e279]: 导出 JSON
+        - button "导出 CSV" [ref=e284] [cursor=pointer]:
+          - paragraph [ref=e288]: 导出 CSV
+      - generic [ref=e295]:
+        - generic [ref=e296]: 筛选结果
+        - generic [ref=e297]: 8 条
+        - generic [ref=e298]: 幻觉 8 条 (100%)
+      - generic [ref=e303]:
+        - generic [ref=e304]:
+          - generic [ref=e305]: h01
+          - generic [ref=e306]: 未判定
+          - generic [ref=e307]: 政策偏差
+          - generic [ref=e308]: 置信度：HIGH
+        - generic [ref=e309]: "[无理由退货天数] KB:7 → Reply:30"
+      - button "查看详情" [ref=e312] [cursor=pointer]:
+        - paragraph [ref=e316]: 查看详情
+      - generic [ref=e321]:
+        - generic [ref=e322]:
+          - generic [ref=e323]: h02
+          - generic [ref=e324]: 未判定
+          - generic [ref=e325]: 参数编造
+          - generic [ref=e326]: 置信度：HIGH
+        - generic [ref=e327]: "[蓝牙版本] KB:5.0 → Reply:5.3; [延迟_ms] KB:80 → Reply:40"
+      - button "查看详情" [ref=e330] [cursor=pointer]:
+        - paragraph [ref=e334]: 查看详情
+      - generic [ref=e339]:
+        - generic [ref=e340]:
+          - generic [ref=e341]: h03
+          - generic [ref=e342]: 未判定
+          - generic [ref=e343]: 能力越界
+          - generic [ref=e344]: 置信度：HIGH
+        - generic [ref=e345]: KB声明无[物流查询接口]能力，但回复声称已执行相关操作
+      - button "查看详情" [ref=e348] [cursor=pointer]:
+        - paragraph [ref=e352]: 查看详情
+      - generic [ref=e357]:
+        - generic [ref=e358]:
+          - generic [ref=e359]: h04
+          - generic [ref=e360]: 未判定
+          - generic [ref=e361]: 政策编造
+          - generic [ref=e362]: 置信度：HIGH
+        - generic [ref=e363]: "[纸质发票] KB:不支持 → Reply:支持"
+      - button "查看详情" [ref=e366] [cursor=pointer]:
+        - paragraph [ref=e370]: 查看详情
+      - generic [ref=e375]:
+        - generic [ref=e376]:
+          - generic [ref=e377]: h05
+          - generic [ref=e378]: 未判定
+          - generic [ref=e379]: 参数编造
+          - generic [ref=e380]: 置信度：HIGH
+        - generic [ref=e381]: "[满减优惠] KB:200-20 → Reply:300-50"
+      - button "查看详情" [ref=e384] [cursor=pointer]:
+        - paragraph [ref=e388]: 查看详情
+      - generic [ref=e393]:
+        - generic [ref=e394]:
+          - generic [ref=e395]: h06
+          - generic [ref=e396]: 未判定
+          - generic [ref=e397]: 政策编造
+          - generic [ref=e398]: 置信度：HIGH
+        - generic [ref=e399]: "[材质] KB:PU合成革 → Reply:头层牛皮"
+      - button "查看详情" [ref=e402] [cursor=pointer]:
+        - paragraph [ref=e406]: 查看详情
+      - generic [ref=e411]:
+        - generic [ref=e412]:
+          - generic [ref=e413]: h07
+          - generic [ref=e414]: 未判定
+          - generic [ref=e415]: 信息编造
+          - generic [ref=e416]: 置信度：HIGH
+        - generic [ref=e417]: 知识库明确说明退货地址需由系统自动匹配后以短信方式发送，人工客服不可口头告知，但客服直接给出了具体地址，属于凭空编造。
+      - button "查看详情" [ref=e420] [cursor=pointer]:
+        - paragraph [ref=e424]: 查看详情
+      - generic [ref=e429]:
+        - generic [ref=e430]:
+          - generic [ref=e431]: h08
+          - generic [ref=e432]: 未判定
+          - generic [ref=e433]: 政策偏差
+          - generic [ref=e434]: 置信度：HIGH
+        - generic [ref=e435]: "[发货时间_小时] KB:24 → Reply:48; [快递公司] KB:中通 → Reply:顺丰"
+      - button "查看详情" [ref=e438] [cursor=pointer]:
+        - paragraph [ref=e442]: 查看详情

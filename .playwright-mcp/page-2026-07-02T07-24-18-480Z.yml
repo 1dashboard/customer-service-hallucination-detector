@@ -1,0 +1,61 @@
+- generic [ref=e2]:
+  - generic [ref=e11]:
+    - heading "导航" [level=1] [ref=e15]
+    - generic [ref=e17]:
+      - paragraph [ref=e21]: 选择页面
+      - radiogroup "选择页面" [ref=e22] [cursor=pointer]:
+        - generic [ref=e23]:
+          - radio "批次管理"
+          - paragraph [ref=e28]: 批次管理
+        - generic [ref=e29]:
+          - radio "上传检测"
+          - paragraph [ref=e34]: 上传检测
+        - generic [ref=e35]:
+          - radio "结果浏览"
+          - paragraph [ref=e40]: 结果浏览
+        - generic [ref=e41]:
+          - radio "评估分析" [checked]
+          - paragraph [ref=e46]: 评估分析
+        - generic [ref=e47]:
+          - radio "误判分析"
+          - paragraph [ref=e52]: 误判分析
+  - generic [ref=e3]:
+    - banner [ref=e55]:
+      - generic [ref=e58]:
+        - button "Deploy" [ref=e60] [cursor=pointer]:
+          - generic [ref=e62]: Deploy
+        - button "Main menu" [ref=e64] [cursor=pointer]:
+          - img [ref=e65]
+    - generic [ref=e68]:
+      - heading "客服回复幻觉检测系统" [level=1] [ref=e73]:
+        - text: 客服回复幻觉检测系统
+        - generic [ref=e74]:
+          - link "Link to heading":
+            - /url: "#2e0e19c"
+            - img
+      - paragraph [ref=e79]: 智能检测客服回复中的政策编造、参数错误和能力越界等问题
+      - heading "评估指标" [level=2] [ref=e86]:
+        - text: 评估指标
+        - generic [ref=e87]:
+          - link "Link to heading":
+            - /url: "#ab75f65"
+            - img
+      - generic [ref=e94]:
+        - generic [ref=e96]:
+          - paragraph [ref=e101]: Ground Truth（人工标注）
+          - region "上传 ground_truth.json" [ref=e104] [cursor=pointer]:
+            - button "Choose File" [ref=e105]
+            - button "upload Upload" [ref=e107]:
+              - generic [ref=e109]:
+                - generic [ref=e111]: upload
+                - paragraph [ref=e113]: Upload
+            - generic [ref=e116]: 200MB per file • JSON
+        - generic [ref=e118]:
+          - paragraph [ref=e123]: 检测结果（系统输出）
+          - region "上传 detection_results.json" [ref=e126] [cursor=pointer]:
+            - button "Choose File" [ref=e127]
+            - button "upload Upload" [ref=e129]:
+              - generic [ref=e131]:
+                - generic [ref=e133]: upload
+                - paragraph [ref=e135]: Upload
+            - generic [ref=e138]: 200MB per file • JSON

@@ -56,6 +56,9 @@ def detect_single(item: DetectionInput) -> DetectionResult:
 
 def detect_batch(items: list[dict]) -> list[DetectionResult]:
     """Run detection on a batch of reply items with concurrent LLM calls."""
+    import time as _time
+    _t0 = _time.time()
+
     # Phase 1: Stage 1 (rules) for all items — fast, no API calls
     stage1_results: list[DetectionResult] = []
     llm_queue: list[tuple[int, DetectionInput, DetectionResult]] = []  # (index, input, stage1_result)
@@ -67,20 +70,25 @@ def detect_batch(items: list[dict]) -> list[DetectionResult]:
             system_reply=item["system_reply"],
             knowledge_base=item["knowledge_base"],
         )
-        print(f"  [{i+1}/{len(items)}] Stage1: {input_item.id}...")
+        _t1 = _time.time()
         result = run_stage1(input_item.id, input_item.user_question, input_item.system_reply, input_item.knowledge_base)
         result = classify(result, input_item.user_question, input_item.knowledge_base)
+        _dt = (_time.time() - _t1) * 1000
 
         if result.confidence == Confidence.HIGH and result.is_hallucination is True:
-            # Stage 1 is confident, no LLM needed
+            print(f"  [{i+1}/{len(items)}] {input_item.id} → Stage1 HIGH ({result.output_type.value if result.output_type else '?'} | {_dt:.0f}ms)")
             stage1_results.append(result)
         else:
+            print(f"  [{i+1}/{len(items)}] {input_item.id} → LLM queue ({_dt:.0f}ms)")
             stage1_results.append(result)
             llm_queue.append((i, input_item, result))
 
+    _t_s1 = _time.time() - _t0
+    print(f"  Stage1 done: {len(items) - len(llm_queue)} caught by rules, {len(llm_queue)} need LLM ({_t_s1:.1f}s)")
+
     # Phase 2: Concurrent LLM judgment for items that need it
     if llm_queue:
-        print(f"  Running LLM judgment on {len(llm_queue)} items (concurrent, max 5)...")
+        _t_llm_start = _time.time()
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = {}
             for idx, input_item, _stage1_result in llm_queue:
@@ -95,8 +103,12 @@ def detect_batch(items: list[dict]) -> list[DetectionResult]:
 
             for future in as_completed(futures):
                 idx = futures[future]
-                llm_result = future.result()
                 result = stage1_results[idx]
+                _t_one = _time.time()
+                llm_result = future.result()
+                _dt_one = _time.time() - _t_one
+
+                print(f"  LLM {result.id}: result={llm_result['is_hallucination']} (got in {_dt_one:.0f}s, total wait)")
 
                 if llm_result["is_hallucination"] is True:
                     result.is_hallucination = True
@@ -112,6 +124,10 @@ def detect_batch(items: list[dict]) -> list[DetectionResult]:
                     result.output_type = None
 
                 stage1_results[idx] = result
+
+        _t_llm = _time.time() - _t_llm_start
+        _t_total = _time.time() - _t0
+        print(f"  LLM phase done: {_t_llm:.1f}s | Total: {_t_total:.1f}s")
 
     return stage1_results
 

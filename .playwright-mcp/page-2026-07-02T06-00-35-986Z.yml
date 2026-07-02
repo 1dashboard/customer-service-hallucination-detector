@@ -1,0 +1,100 @@
+- generic:
+  - generic:
+    - generic:
+      - generic [ref=e2]:
+        - generic [ref=e8]:
+          - heading "导航" [level=1] [ref=e12]
+          - generic [ref=e14]:
+            - paragraph [ref=e18]: 选择页面
+            - radiogroup "选择页面" [ref=e19] [cursor=pointer]:
+              - generic [ref=e20]:
+                - radio "批次管理"
+                - paragraph [ref=e25]: 批次管理
+              - generic [ref=e26]:
+                - radio "上传检测" [checked]
+                - paragraph [ref=e31]: 上传检测
+              - generic [ref=e32]:
+                - radio "结果浏览"
+                - paragraph [ref=e37]: 结果浏览
+              - generic [ref=e38]:
+                - radio "评估分析"
+                - paragraph [ref=e43]: 评估分析
+              - generic [ref=e44]:
+                - radio "误判分析"
+                - paragraph [ref=e49]: 误判分析
+        - generic [ref=e52]:
+          - banner [ref=e53]:
+            - generic [ref=e56]:
+              - button "Deploy" [ref=e66] [cursor=pointer]:
+                - generic [ref=e68]: Deploy
+              - button "Main menu" [ref=e70] [cursor=pointer]:
+                - img [ref=e71]
+          - generic [ref=e76]:
+            - heading "🔍 客服回复幻觉检测系统" [level=1] [ref=e81]:
+              - text: 🔍 客服回复幻觉检测系统
+              - link "Link to heading" [ref=e229] [cursor=pointer]:
+                - /url: "#5afac176"
+                - img [ref=e230]
+            - heading "📤 上传数据并检测" [level=2] [ref=e151]:
+              - text: 📤 上传数据并检测
+              - generic [ref=e88]:
+                - link "Link to heading":
+                  - /url: "#ca432004"
+                  - img
+            - generic [ref=e153]:
+              - paragraph [ref=e157]: 上传 replies.json 文件
+              - region "上传 replies.json 文件" [ref=e158] [cursor=pointer]:
+                - button "Choose File" [ref=e159]
+                - generic [ref=e161]:
+                  - generic "replies.json, 6.5KB" [ref=e164]:
+                    - img [ref=e166]
+                    - generic [ref=e169]:
+                      - generic "replies.json" [ref=e170]
+                      - generic [ref=e171]: 6.5KB
+                    - button "Remove replies.json" [ref=e173]:
+                      - img [ref=e174]
+                  - button "Add files" [ref=e177]:
+                    - generic [ref=e181]: add
+            - status [ref=e184]:
+              - paragraph [ref=e188]: 成功加载 20 条回复数据
+            - group [ref=e191]:
+              - generic "keyboard_arrow_right 数据预览" [ref=e192] [cursor=pointer]:
+                - generic [ref=e193]:
+                  - generic [ref=e195]: keyboard_arrow_right
+                  - paragraph [ref=e198]: 数据预览
+            - button "🚀 开始检测" [active] [ref=e201] [cursor=pointer]:
+              - paragraph [ref=e205]: 🚀 开始检测
+            - status [ref=e234]:
+              - paragraph [ref=e238]: 检测完成！共 20 条，发现 18 条幻觉
+      - generic:
+        - generic:
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img
+          - img

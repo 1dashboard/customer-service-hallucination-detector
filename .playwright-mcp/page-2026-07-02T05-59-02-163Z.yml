@@ -1,0 +1,75 @@
+- generic [ref=e2]:
+  - generic [ref=e15]:
+    - heading "导航" [level=1] [ref=e19]
+    - generic [ref=e21]:
+      - paragraph [ref=e25]: 选择页面
+      - radiogroup "选择页面" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]:
+          - radio "批次管理"
+          - paragraph [ref=e32]: 批次管理
+        - generic [ref=e33]:
+          - radio "上传检测" [checked]
+          - paragraph [ref=e38]: 上传检测
+        - generic [ref=e39]:
+          - radio "结果浏览"
+          - paragraph [ref=e44]: 结果浏览
+        - generic [ref=e45]:
+          - radio "评估分析"
+          - paragraph [ref=e50]: 评估分析
+        - generic [ref=e51]:
+          - radio "误判分析"
+          - paragraph [ref=e56]: 误判分析
+  - generic [ref=e3]:
+    - banner [ref=e59]:
+      - generic [ref=e62]:
+        - generic [ref=e236]:
+          - img "Running..." [ref=e237]:
+            - img [ref=e238]
+          - button "Stop" [ref=e242] [cursor=pointer]
+        - button "Deploy" [ref=e64] [cursor=pointer]:
+          - generic [ref=e66]: Deploy
+        - button "Main menu" [ref=e68] [cursor=pointer]:
+          - img [ref=e69]
+    - generic [ref=e72]:
+      - heading "🔍 客服回复幻觉检测系统" [level=1] [ref=e77]:
+        - text: 🔍 客服回复幻觉检测系统
+        - generic [ref=e78]:
+          - link "Link to heading":
+            - /url: "#5afac176"
+            - img
+      - heading "📤 上传数据并检测" [level=2] [ref=e138]:
+        - text: 📤 上传数据并检测
+        - generic [ref=e84]:
+          - link "Link to heading":
+            - /url: "#ca432004"
+            - img
+      - generic [ref=e140]:
+        - paragraph [ref=e144]: 上传 replies.json 文件
+        - region "上传 replies.json 文件" [ref=e145] [cursor=pointer]:
+          - button "Choose File" [ref=e146]
+          - generic [ref=e159]:
+            - generic "replies.json, 6.5KB" [ref=e162]:
+              - img [ref=e164]
+              - generic [ref=e167]:
+                - generic "replies.json" [ref=e168]
+                - generic [ref=e169]: 6.5KB
+              - button "Remove replies.json" [ref=e171]:
+                - img [ref=e172]
+            - button "Add files" [ref=e175]:
+              - generic [ref=e179]: add
+      - status [ref=e182]:
+        - paragraph [ref=e186]: 成功加载 20 条回复数据
+      - group [ref=e189]:
+        - generic "keyboard_arrow_right 数据预览" [ref=e190] [cursor=pointer]:
+          - generic [ref=e191]:
+            - generic [ref=e193]: keyboard_arrow_right
+            - paragraph [ref=e196]: 数据预览
+      - button "🚀 开始检测" [active] [ref=e199] [cursor=pointer]:
+        - paragraph [ref=e203]: 🚀 开始检测
+      - generic [ref=e213]:
+        - status [ref=e218]:
+          - generic [ref=e220]:
+            - generic [ref=e223]: ⏳
+            - paragraph [ref=e225]: 正在检测 20 条回复，已用时 10s...
+        - button "⏹ 取消检测" [ref=e230] [cursor=pointer]:
+          - paragraph [ref=e234]: ⏹ 取消检测

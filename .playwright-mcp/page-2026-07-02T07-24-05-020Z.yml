@@ -1,0 +1,70 @@
+- generic [ref=e2]:
+  - generic [ref=e11]:
+    - heading "导航" [level=1] [ref=e15]
+    - generic [ref=e17]:
+      - paragraph [ref=e21]: 选择页面
+      - radiogroup "选择页面" [ref=e22] [cursor=pointer]:
+        - generic [ref=e23]:
+          - radio "批次管理"
+          - paragraph [ref=e28]: 批次管理
+        - generic [ref=e29]:
+          - radio "上传检测"
+          - paragraph [ref=e34]: 上传检测
+        - generic [ref=e35]:
+          - radio "结果浏览"
+          - paragraph [ref=e40]: 结果浏览
+        - generic [ref=e41]:
+          - radio "评估分析"
+          - paragraph [ref=e46]: 评估分析
+        - generic [ref=e47]:
+          - radio "误判分析" [checked]
+          - paragraph [ref=e52]: 误判分析
+  - generic [ref=e3]:
+    - banner [ref=e55]:
+      - generic [ref=e58]:
+        - button "Deploy" [ref=e60] [cursor=pointer]:
+          - generic [ref=e62]: Deploy
+        - button "Main menu" [ref=e64] [cursor=pointer]:
+          - img [ref=e65]
+    - generic [ref=e68]:
+      - heading "客服回复幻觉检测系统" [level=1] [ref=e73]:
+        - text: 客服回复幻觉检测系统
+        - generic [ref=e74]:
+          - link "Link to heading":
+            - /url: "#2e0e19c"
+            - img
+      - paragraph [ref=e79]: 智能检测客服回复中的政策编造、参数错误和能力越界等问题
+      - heading "误判分析" [level=2] [ref=e86]:
+        - text: 误判分析
+        - generic [ref=e87]:
+          - link "Link to heading":
+            - /url: "#e8271879"
+            - img
+      - generic [ref=e92]:
+        - generic [ref=e93]:
+          - generic [ref=e94]: 🔄
+          - generic [ref=e95]: 措辞差异误报 (h16)
+        - generic [ref=e96]: 现象 知识库和回复表述方向不同但语义一致，导致被误判为幻觉
+        - generic [ref=e97]: 案例 KB 说“可能有色差”，回复说“颜色基本准确，有轻微色差” → 语义等价但措辞相反
+        - generic [ref=e98]: 原因 规则引擎对方向性措辞敏感，LLM 通常能正确判断
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - generic [ref=e105]: 📋
+          - generic [ref=e106]: 信息遗漏漏检 (h20)
+        - generic [ref=e107]: 现象 回复说的不算错，但遗漏了关键限制信息，导致漏检
+        - generic [ref=e108]: 案例 KB 说“30% 用户反馈偏大半码”，回复说“尺码标准不偏”
+        - generic [ref=e109]: 原因 软性错误规则引擎难以捕获，LLM 需要理解不完整信息即误导
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - generic [ref=e116]: ⚡
+          - generic [ref=e117]: 部分正确的混合回复 (h04)
+        - generic [ref=e118]: 现象 回复中既有正确信息也有错误信息，容易漏判
+        - generic [ref=e119]: 案例 “支持电子发票” (✓) + “支持纸质发票” (✗)，混合在一起
+        - generic [ref=e120]: 原因 实体对齐只能捕获多了一个实体，需要 LLM 做逐句判定
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - generic [ref=e127]: ⚠️
+          - generic [ref=e128]: 安全相关漏检 (h13)
+        - generic [ref=e129]: 现象 需要专业知识才能识别风险，容易被忽略
+        - generic [ref=e130]: 案例 “视黄醇衍生物对孕妇的影响”需要医学背景知识
+        - generic [ref=e131]: 原因 依赖 LLM 的预训练知识，特殊领域可能存在知识盲区
