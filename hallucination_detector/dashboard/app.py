@@ -40,6 +40,12 @@ def main() -> None:
         "误判分析": page_misclassification,
     }
 
+    # Restore page from URL param on browser refresh
+    if "nav_page" not in st.session_state:
+        qp = st.query_params
+        if qp.get("page") in pages:
+            st.session_state.nav_page = qp["page"]
+
     # Handle programmatic navigation before widget instantiation
     if nav := st.session_state.pop("_nav_request", None):
         if nav in pages:
@@ -48,6 +54,10 @@ def main() -> None:
     with st.sidebar:
         st.title("导航")
         page = st.radio("选择页面", list(pages.keys()), key="nav_page")
+
+    # Persist current page to URL
+    if st.query_params.get("page") != page:
+        st.query_params["page"] = page
 
     pages[page]()
 
