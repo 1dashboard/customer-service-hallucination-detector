@@ -23,6 +23,36 @@ def compute_metrics(
     """
     gt_map = {item["id"]: item for item in ground_truth}
 
+    # Validate input formats — check all items, not just the first
+    for i, item in enumerate(ground_truth):
+        if "is_hallucination" not in item:
+            raise ValueError(
+                f"Ground Truth 第 {i+1} 条数据（ID: {item.get('id', '?')}）缺少 'is_hallucination' 字段。"
+                "该文件可能不是 Ground Truth，请确认上传的是人工标注文件而不是检测输入文件。"
+            )
+    for i, item in enumerate(results):
+        if "is_hallucination" not in item and "output_type" not in item:
+            raise ValueError(
+                f"检测结果第 {i+1} 条数据（ID: {item.get('id', '?')}）缺少 'is_hallucination' 和 'output_type' 字段。"
+                "该文件可能不是检测结果，请确认上传的是 detection_results.json。"
+            )
+
+    # Ground truth having fewer items than results suggests swapped files
+    if len(ground_truth) < len(results):
+        raise ValueError(
+            f"Ground Truth 数据条数 ({len(ground_truth)}) 少于检测结果 ({len(results)})，"
+            "可能两个文件上传反了，请检查。"
+        )
+
+    # ID sets should have overlap — zero overlap means unrelated files
+    gt_ids = set(gt_map.keys())
+    result_ids = {item["id"] for item in results}
+    if gt_ids.isdisjoint(result_ids):
+        raise ValueError(
+            "Ground Truth 与检测结果的 ID 完全无交集，"
+            "请确认上传的是同一批数据的对应文件。"
+        )
+
     tp = tn = fp = fn = 0
     fp_cases: list[dict] = []
     fn_cases: list[dict] = []

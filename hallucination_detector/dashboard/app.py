@@ -156,6 +156,45 @@ def _show_batch_results(conn, batch_id: int) -> None:
     hallu = sum(1 for r in rows if r["is_hallucination"])
     st.metric("筛选结果", f"{total} 条", f"幻觉 {hallu} 条 ({hallu/total*100:.0f}%)" if total else "")
 
+    # Build export data (always full batch, not filtered)
+    all_rows = conn.execute(
+        "SELECT * FROM detection_results WHERE batch_id = ? ORDER BY id",
+        [batch_id],
+    ).fetchall()
+    export_data = []
+    for r in all_rows:
+        export_data.append({
+            "id": r["reply_id"],
+            "user_question": r["user_question"],
+            "system_reply": r["system_reply"],
+            "knowledge_base": r["knowledge_base"],
+            "is_hallucination": bool(r["is_hallucination"]) if r["is_hallucination"] is not None else None,
+            "detection_layer": r["detection_layer"],
+            "output_type": r["output_type"],
+            "confidence": r["confidence"],
+            "reason": r["reason"],
+        })
+
+    col_dl1, col_dl2 = st.columns(2)
+    with col_dl1:
+        st.download_button(
+            "📥 导出 JSON",
+            json.dumps(export_data, ensure_ascii=False, indent=2),
+            file_name=f"detection_results_batch_{batch_id}.json",
+            mime="application/json",
+            key=f"dl_json_{batch_id}",
+        )
+    with col_dl2:
+        df_export = pd.DataFrame(export_data)
+        csv = df_export.to_csv(index=False).encode("utf-8-sig")
+        st.download_button(
+            "📥 导出 CSV",
+            csv,
+            file_name=f"detection_results_batch_{batch_id}.csv",
+            mime="text/csv",
+            key=f"dl_csv_{batch_id}",
+        )
+
     for row in rows:
         is_hallu = row["is_hallucination"]
         status_text = "⚠️ 幻觉" if is_hallu else ("✅ 正常" if is_hallu is not None else "❓ 未判定")
@@ -169,9 +208,9 @@ def _show_batch_results(conn, batch_id: int) -> None:
             )
             cols[2].markdown((row["reason"] or "")[:100])
             out_type = row["output_type"] or "-"
-            confidence = row["confidence"] or "-"
+            confidence = f"置信度：{row['confidence']}" if row["confidence"] else "-"
             cols[3].markdown(f"`{out_type}`")
-            cols[4].markdown(f"`{confidence}`")
+            cols[4].markdown(confidence)
 
             if cols[5].button("详情", key=f"detail_batch_{batch_id}_{row['id']}"):
                 _show_detail(row)
@@ -331,11 +370,12 @@ def _show_detail(row) -> None:
         st.markdown(f"**系统回复:** {row['system_reply']}")
         st.markdown(f"**知识库:** {row['knowledge_base']}")
         st.divider()
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         is_hallu = row["is_hallucination"]
         col1.metric("是否幻觉", "是" if is_hallu else "否" if is_hallu is not None else "未判定")
         col2.metric("检测层", row["detection_layer"] or "-")
         col3.metric("输出类型", row["output_type"] or "-")
+        col4.metric("置信度", row["confidence"] or "-")
         st.info(f"**判定依据:** {row['reason']}")
 
 
@@ -358,24 +398,28 @@ def page_evaluation() -> None:
             st.error(f"JSON 解析错误: {e}")
             return
 
-        metrics = compute_metrics(gt_data, results_data)
+        try:
+            metrics = compute_metrics(gt_data, results_data)
+        except (ValueError, KeyError) as e:
+            st.error(f"文件格式错误: {e}")
+            return
 
         st.divider()
         st.subheader("核心指标")
 
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Accuracy", f"{metrics.accuracy:.1%}")
-        col2.metric("Precision", f"{metrics.precision:.1%}")
-        col3.metric("Recall", f"{metrics.recall:.1%}")
-        col4.metric("F1 Score", f"{metrics.f1:.1%}")
+        col1.metric("准确率 (Accuracy)", f"{metrics.accuracy:.1%}")
+        col2.metric("精确率 (Precision)", f"{metrics.precision:.1%}")
+        col3.metric("召回率 (Recall)", f"{metrics.recall:.1%}")
+        col4.metric("F1 分数 (F1 Score)", f"{metrics.f1:.1%}")
 
         st.divider()
         col1, col2 = st.columns(2)
-        col1.metric("True Positives", metrics.true_positives)
-        col2.metric("True Negatives", metrics.true_negatives)
+        col1.metric("真阳性 (True Positives)", metrics.true_positives)
+        col2.metric("真阴性 (True Negatives)", metrics.true_negatives)
         col3, col4 = st.columns(2)
-        col3.metric("False Positives (误报)", metrics.false_positives)
-        col4.metric("False Negatives (漏检)", metrics.false_negatives)
+        col3.metric("误报 (False Positives)", metrics.false_positives)
+        col4.metric("漏检 (False Negatives)", metrics.false_negatives)
 
         # Misclassification tables
         if metrics.false_negatives > 0:
@@ -440,10 +484,10 @@ def page_misclassification() -> None:
         if evals:
             st.subheader("最近评估详情")
             col1, col2, col3, col4 = st.columns(4)
-            col1.metric("Accuracy", f"{evals['accuracy']:.1%}")
-            col2.metric("Precision", f"{evals['precision']:.1%}")
-            col3.metric("Recall", f"{evals['recall']:.1%}")
-            col4.metric("F1", f"{evals['f1']:.1%}")
+            col1.metric("准确率 (Accuracy)", f"{evals['accuracy']:.1%}")
+            col2.metric("精确率 (Precision)", f"{evals['precision']:.1%}")
+            col3.metric("召回率 (Recall)", f"{evals['recall']:.1%}")
+            col4.metric("F1 分数 (F1)", f"{evals['f1']:.1%}")
 
             details = json.loads(evals["details"])
             if details.get("false_negatives"):
